@@ -1,15 +1,25 @@
 const express = require('express');
 const cors = require('cors');
+require('dotenv').config();
+
+
+const authRoutes = require('./routes/auth.routes');
+
 const app = express();
-const port = process.env.PORT || 5000;
+const PORT = 5000;
 
 app.use(cors());
 app.use(express.json());
 
-app.get('/', (req, res) => {
-  res.send('Serwer Express działa!');
+// Podpinamy nasze „moduły tras”
+app.use('/api', authRoutes);
+
+
+
+app.listen(PORT, () => {
+  console.log(`🚀 Serwer Express działa na porcie ${PORT}`);
 });
 
-app.listen(port, () => {
-  console.log(`Serwer Express działa na porcie: ${port}`);
-});
+
+//tylko pod vercel
+//module.exports = app;
