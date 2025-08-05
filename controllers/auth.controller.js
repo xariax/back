@@ -39,7 +39,7 @@ exports.login = (req, res) => {
       httpOnly: true,
       secure: true,
       maxAge: 43200000,
-      sameSite: 'none', // albo 'Strict', zależnie od twoich potrzeb
+      sameSite: 'Lax', // albo 'Strict', zależnie od twoich potrzeb
       path: '/' // ważne – cookie dostępne na całej aplikacji
     });
 
@@ -82,12 +82,13 @@ exports.checkAuth = (req, res) => {
   
   exports.logout = (req, res) => {
   res.clearCookie('authToken', {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'Lax',
-    path: '/',
+      httpOnly: true,
+      secure: true,
+      maxAge: 43200000,
+      sameSite: 'Lax', // albo 'Strict', zależnie od twoich potrzeb
+      path: '/' // ważne – cookie dostępne na całej aplikacji
   });
-  res.status(200).json({ success: true, message: 'Logged out' });
+  res.status(200).json({ success: true, message: 'Logged ouuut' });
 
   
 };
