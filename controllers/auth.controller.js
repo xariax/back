@@ -87,6 +87,7 @@ exports.checkAuth = (req, res) => {
     sameSite: 'Lax',
     path: '/',
   });
-  res.status(200).json({ success: true, message: 'Wylogowano pomyślnie' });
-  res.redirect('/login'); // lub inna ścieżka, np. '/'
+  res.status(200).json({ success: true, message: 'Logged out' });
+
+  
 };
