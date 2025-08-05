@@ -1,24 +1,15 @@
 const jwt = require('jsonwebtoken');
 
-/**
- * Middleware do autoryzacji użytkownika za pomocą JWT.
- * Oczekuje nagłówka Authorization: Bearer <token>
- */
-const authenticateToken = (req, res, next) => {
-  const authHeader = req.headers['authorization'];
-  const token = authHeader?.split(' ')[1]; // "Bearer <token>"
+function authenticateToken(req, res, next) {
+  const token = req.cookies?.authToken;
+  if (!token) return res.status(401).json({ message: 'Brak tokena autoryzacyjnego' });
 
-  if (!token) {
-    return res.status(401).json({ message: 'Brak tokena autoryzacyjnego' });
-  }
- 
   jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
-    if (err) {
-      return res.status(403).json({ message: 'Nieprawidłowy albo wygasły token' });
-    }
-    req.user = user; // Dołącza dane użytkownika do żądania
+    if (err) return res.status(403).json({ message: 'Nieprawidłowy lub wygasły token' });
+    req.user = user;
     next();
   });
-};
+}
+
 
 module.exports = authenticateToken;

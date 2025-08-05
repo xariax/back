@@ -1,13 +1,11 @@
 const express = require('express');
 const cors = require('cors');
 require('dotenv').config();
-
+const cookieParser = require('cookie-parser');
 
 const authRoutes = require('./routes/auth.routes');
 
 const app = express();
-
-
 
 app.use(cors({
   origin: ['https://elp-indol.vercel.app',
@@ -17,6 +15,7 @@ app.use(cors({
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true // tylko jeśli potrzebujesz np. sesji/cookies
 }));
+app.use(cookieParser());
 app.use(express.json());
 
 // Podpinamy nasze „moduły tras”

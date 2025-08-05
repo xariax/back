@@ -34,10 +34,17 @@ exports.login = (req, res) => {
         expiresIn: process.env.JWT_EXPIRES_IN
       }
     );
+        // Ustawiamy cookie HttpOnly, secure w prod, z odpowiednim czasem życia
+    res.cookie('authToken', token, {
+      httpOnly: true,
+      secure: false,
+      maxAge: 43200000,
+      sameSite: 'Lax', // albo 'Strict', zależnie od twoich potrzeb
+      path: '/' // ważne – cookie dostępne na całej aplikacji
+    });
 
     return res.json({
       success: true,
-      token,
       user: {
         login: user.login,
         role: user.role,
@@ -45,4 +52,40 @@ exports.login = (req, res) => {
       }
     });
   });
+
+
+};
+
+
+exports.checkAuth = (req, res) => {
+  const token = req.cookies.authToken;
+
+  if (!token) {
+    return res.status(401).json({ success: false, message: 'Brak tokena autoryzacji' });
+  }
+
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    return res.json({
+      success: true,
+      user: {
+        login: decoded.login,
+        role: decoded.role,
+        name: decoded.login
+      }
+    });
+  } catch (err) {
+    return res.status(401).json({ success: false, message: 'Niepoprawny lub wygasły token' });
+  }
+};
+
+  
+  exports.logout = (req, res) => {
+  res.clearCookie('authToken', {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'Lax',
+    path: '/',
+  });
+  res.status(200).json({ success: true, message: 'Wylogowano pomyślnie' });
 };
