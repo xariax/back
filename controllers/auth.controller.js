@@ -37,9 +37,9 @@ exports.login = (req, res) => {
         // Ustawiamy cookie HttpOnly, secure w prod, z odpowiednim czasem życia
     res.cookie('authToken', token, {
       httpOnly: true,
-      secure: false,
+      secure: true,
       maxAge: 43200000,
-      sameSite: 'Lax', // albo 'Strict', zależnie od twoich potrzeb
+      sameSite: 'none', // albo 'Strict', zależnie od twoich potrzeb
       path: '/' // ważne – cookie dostępne na całej aplikacji
     });
 
