@@ -35,13 +35,15 @@ exports.login = (req, res) => {
       }
     );
         // Ustawiamy cookie HttpOnly, secure w prod, z odpowiednim czasem życia
-    res.cookie('authToken', token, {
-      httpOnly: true,
-      secure: true,
-      maxAge: 43200000,
-      sameSite: 'Lax', // albo 'Strict', zależnie od twoich potrzeb
-      path: '/' // ważne – cookie dostępne na całej aplikacji
-    });
+  res.cookie('authToken', token, {
+httpOnly: true,
+  secure: true,
+  sameSite: 'None',
+  path: '/',
+  maxAge: 43200000,
+
+});
+
 
     return res.json({
       success: true,
@@ -82,11 +84,11 @@ exports.checkAuth = (req, res) => {
   
   exports.logout = (req, res) => {
   res.clearCookie('authToken', {
-      httpOnly: true,
-      secure: true,
-      maxAge: 43200000,
-      sameSite: 'Lax', // albo 'Strict', zależnie od twoich potrzeb
-      path: '/' // ważne – cookie dostępne na całej aplikacji
+httpOnly: true,
+  secure: true,
+  sameSite: 'None',
+  path: '/',
+  maxAge: 43200000,
   });
   res.status(200).json({ success: true, message: 'Logged ouuut' });
 

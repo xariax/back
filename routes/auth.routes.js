@@ -10,9 +10,10 @@ const {
   updateEventReason
 } = require('../controllers/doneEvent');
 
-const Basket =require('../controllers/Basket')
+const Basket =require('../controllers/Basket');
+const { getOrders } = require('../controllers/getOrders');
 
-
+router.get('/orders', authenticateToken, getOrders)
 router.get('/getBasket', authenticateToken, Basket.getBasket)
 router.get('/stock', authenticateToken, getStock)
 router.get('/events',authenticateToken, getRecentEvents);
@@ -22,7 +23,7 @@ router.get('/me', authController.checkAuth);
 router.put('/events/:id', updateEventReason);
 
 
-
+router.post('/BasketOrder', authenticateToken, Basket.BasketOrder)
 router.post('/login', authController.login);
 router.post('/addItemToBasket', authenticateToken, Basket.addItemToBasket)
 router.post('/report',authenticateToken, Reports.doneReport)

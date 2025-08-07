@@ -49,3 +49,47 @@ exports.DeleteId = (req, res) => {
 };
 
 
+exports.BasketOrder = async (req, res) => {
+  const data = req.body.data;
+  const insertQuery = `INSERT INTO basketOrders (ShortName, Quantity, Operator, Machine, Name, status) VALUES (?, ?, ?, ?, ?,?)`;
+  const deleteQuery = `DELETE FROM basket`;
+  const clearAutoIncrement = "DELETE FROM sqlite_sequence WHERE name = 'basket';"
+
+  try {
+    // Wstawianie danych jeden po drugim w pętli asynchronicznej
+    for (const item of data) {
+      await new Promise((resolve, reject) => {
+        db.run(insertQuery, [item.ShortName, item.Quantity, item.Operator, item.Machine, item.Name, 'waiting'], function(err) {
+          if (err) {
+            reject(err);
+          } else {
+            resolve();
+          }
+        });
+      });
+    }
+
+    // Po wszystkich insertach wykonaj delete z basket
+    await new Promise((resolve, reject) => {
+      db.run(deleteQuery, function(err) {
+        if (err) {
+          reject(err);
+        } else {
+          resolve();
+        }
+      });
+    });
+    await new Promise((resolve, reject) => {
+  db.run(clearAutoIncrement, function(err) {
+    if (err) reject(err);
+    else resolve();
+  });
+});
+
+    console.log('📝 Znaleziono:', data);
+    res.status(200).json({ message: "✅ Wszystkie dane zapisane i koszyk wyczyszczony" });
+  } catch (error) {
+    console.error("Błąd przy zapisie/usuwaniu:", error.message);
+    res.status(500).json({ message: "Błąd w trakcie zapisu/usuwania danych" });
+  }
+};
