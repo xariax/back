@@ -2,9 +2,9 @@ const jwt = require('jsonwebtoken');
 
 function authenticateToken(req, res, next) {
   // Jeśli zapytanie jest do /logout, pomijamy weryfikację tokena
-  if (req.path === '/logout') {
-    return next();
-  }
+//  if (req.path === '/logout') {
+  //  return next();
+  //}
 
   const token = req.cookies?.authToken;
   if (!token) {
