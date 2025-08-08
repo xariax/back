@@ -37,7 +37,7 @@ router.post('/toverify',authenticateToken, Reports.toVerifyReport)
 router.delete('/Basket/:id', authenticateToken, Basket.DeleteId)
 
 //wylogowanie
-router.post('/logout',authenticateToken, authController.logout);
+router.post('/logout', authController.logout);
 
 
 

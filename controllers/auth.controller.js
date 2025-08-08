@@ -82,32 +82,61 @@ exports.checkAuth = (req, res) => {
 };
 
   
+// exports.logout = (req, res) => {
+//   const login = req.user?.login;
+
+//   if (!login) {
+//     res.clearCookie('authToken', {
+//  httpOnly: true,
+//   secure: true,
+//   sameSite: 'none',
+//   path: '/',
+
+//     });
+//     return res.status(200).json({ success: true, message: 'Logged out' });
+//   }
+
+//   const sql = `UPDATE users SET currentMachine = NULL WHERE login = ?`;
+//   db.run(sql, [login], function(err) {
+//     if (err) console.error('Błąd przy czyszczeniu currentMachine:', err.message);
+
+//     res.clearCookie('authToken', {
+// httpOnly: true,
+//   secure: true,
+//   sameSite: 'none',
+//   path: '/',
+
+//     });
+//     res.status(200).json({ success: true, message: 'Logged out' });
+//   });
+// };
+
+
 exports.logout = (req, res) => {
   const login = req.user?.login;
 
-  if (!login) {
-    res.clearCookie('authToken', {
- httpOnly: true,
-  secure: true,
-  sameSite: 'none',
-  path: '/',
-
+  // Tu możesz użyć login, jeśli jest dostępny (np. czyszczenie w bazie itd.)
+  if (login) {
+    // Przykład operacji na bazie, jeśli chcesz (opcjonalne)
+    const sql = `UPDATE users SET currentMachine = NULL WHERE login = ?`;
+    db.run(sql, [login], function(err) {
+      if (err) console.error('Błąd przy czyszczeniu currentMachine:', err.message);
+      // Nawet jeśli jest błąd, usuwamy cookie i zwracamy odpowiedź
+      _clearAndRespond();
     });
-    return res.status(200).json({ success: true, message: 'Logged out' });
+  } else {
+    // Jeśli login niezdefiniowany, po prostu usuwamy cookie
+    _clearAndRespond();
   }
 
-  const sql = `UPDATE users SET currentMachine = NULL WHERE login = ?`;
-  db.run(sql, [login], function(err) {
-    if (err) console.error('Błąd przy czyszczeniu currentMachine:', err.message);
-
+  function _clearAndRespond() {
     res.clearCookie('authToken', {
-httpOnly: true,
-  secure: true,
-  sameSite: 'none',
-  path: '/',
-
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',  // zalecane zabezpieczenia https
+      sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax',
+      path: '/',
     });
     res.status(200).json({ success: true, message: 'Logged out' });
-  });
+  }
 };
 
