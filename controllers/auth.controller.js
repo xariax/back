@@ -37,8 +37,8 @@ exports.login = (req, res) => {
         // Ustawiamy cookie HttpOnly, secure w prod, z odpowiednim czasem życia
   res.cookie('authToken', token, {
 httpOnly: true,
-  secure: true,
-  sameSite: 'None',
+  secure: false,
+  sameSite: 'lax',
   path: '/',
   maxAge: 43200000,
 
@@ -88,8 +88,8 @@ exports.logout = (req, res) => {
   if (!login) {
     res.clearCookie('authToken', {
  httpOnly: true,
-  secure: true,
-  sameSite: 'None',
+  secure: false,
+  sameSite: 'lax',
   path: '/',
 
     });
@@ -102,8 +102,8 @@ exports.logout = (req, res) => {
 
     res.clearCookie('authToken', {
 httpOnly: true,
-  secure: true,
-  sameSite: 'None',
+  secure: false,
+  sameSite: 'lax',
   path: '/',
 
     });
