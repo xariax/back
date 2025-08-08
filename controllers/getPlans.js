@@ -2,10 +2,13 @@
 const path = require("path");
 const XLSX = require("xlsx");
 
- 
 const getPlans = (req, res) => {
   const machineFromRequest = req.params.sheetName; // np. psg1
   const filePath = path.join(__dirname, "..", "files", "plans.xlsx");
+
+
+
+
 
   try {
     const workbook = XLSX.readFile(filePath);

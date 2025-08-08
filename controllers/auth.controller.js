@@ -82,15 +82,30 @@ exports.checkAuth = (req, res) => {
 };
 
   
-  exports.logout = (req, res) => {
-  res.clearCookie('authToken', {
-httpOnly: true,
-  secure: true,
-  sameSite: 'None',
-  path: '/',
-  maxAge: 43200000,
-  });
-  res.status(200).json({ success: true, message: 'Logged ouuut' });
+exports.logout = (req, res) => {
+  const login = req.user?.login;
 
-  
+  if (!login) {
+    res.clearCookie('authToken', {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax',
+      path: '/',
+    });
+    return res.status(200).json({ success: true, message: 'Logged out' });
+  }
+
+  const sql = `UPDATE users SET currentMachine = NULL WHERE login = ?`;
+  db.run(sql, [login], function(err) {
+    if (err) console.error('Błąd przy czyszczeniu currentMachine:', err.message);
+
+    res.clearCookie('authToken', {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax',
+      path: '/',
+    });
+    res.status(200).json({ success: true, message: 'Logged out' });
+  });
 };
+

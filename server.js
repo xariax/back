@@ -6,7 +6,7 @@ const cookieParser = require('cookie-parser');
 const authRoutes = require('./routes/auth.routes');
 
 const app = express();
-
+app.use(cookieParser());
 const allowedOrigins = ['http://localhost:3000', 'https://elp-indol.vercel.app', 'https://back-xycb.onrender.com'];
 
 app.use(cors({
@@ -23,8 +23,6 @@ app.use(cors({
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
-// Middleware do parsowania ciasteczek - musi być przed trasami
-app.use(cookieParser());
 
 // Middleware do parsowania JSON - też przed trasami
 app.use(express.json());
