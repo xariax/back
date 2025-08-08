@@ -87,10 +87,11 @@ exports.logout = (req, res) => {
 
   if (!login) {
     res.clearCookie('authToken', {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax',
-      path: '/',
+ httpOnly: true,
+  secure: true,
+  sameSite: 'None',
+  path: '/',
+
     });
     return res.status(200).json({ success: true, message: 'Logged out' });
   }
@@ -100,10 +101,11 @@ exports.logout = (req, res) => {
     if (err) console.error('Błąd przy czyszczeniu currentMachine:', err.message);
 
     res.clearCookie('authToken', {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax',
-      path: '/',
+httpOnly: true,
+  secure: true,
+  sameSite: 'None',
+  path: '/',
+
     });
     res.status(200).json({ success: true, message: 'Logged out' });
   });
