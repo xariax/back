@@ -28,6 +28,10 @@ const jwt = require('jsonwebtoken');
 function authenticateToken(req, res, next) {
   // Jeśli zapytanie jest do /logout, to próbujemy odczytać token jeśli jest,
   // ale nie blokujemy żądania, nawet jeśli token jest brak lub jest nieważny.
+
+  console.log('PATH:', req.path);
+console.log('Cookie authToken:', req.cookies?.authToken);
+
   if (req.path === '/logout') {
     const token = req.cookies?.authToken;
     if (!token) {

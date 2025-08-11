@@ -23,6 +23,13 @@ exports.login = (req, res) => {
       });
     }
 
+        if (user.currentMachine && user.currentMachine.trim() !== '') {
+      return res.status(403).json({
+        success: false,
+        message: 'Jesteś już zalogowany na innym urządzeniu'
+      });
+    }
+
     // Tworzenie tokena JWT
     const token = jwt.sign(
       {
@@ -113,6 +120,7 @@ exports.checkAuth = (req, res) => {
 
 
 exports.logout = (req, res) => {
+   console.log('req.user w logout:', req.user);
   const login = req.user?.login;
 
   // Tu możesz użyć login, jeśli jest dostępny (np. czyszczenie w bazie itd.)

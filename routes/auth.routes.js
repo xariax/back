@@ -13,6 +13,7 @@ const {
 
 const Basket =require('../controllers/Basket');
 const { getOrders } = require('../controllers/getOrders');
+const { getDataMachine } = require('../controllers/getDataMachine');
 
 
 router.get('/user/machine', authenticateToken, machineCheck.getUserMachine)
@@ -22,6 +23,7 @@ router.get('/stock', authenticateToken, getStock)
 router.get('/events',authenticateToken, getRecentEvents);
 router.get('/getPlans/:sheetName',authenticateToken, getPlans);
 router.get('/me', authController.checkAuth);
+router.get('/DataMachine', authenticateToken, getDataMachine)
 
 router.put('/events/:id', updateEventReason);
 
@@ -37,7 +39,7 @@ router.post('/toverify',authenticateToken, Reports.toVerifyReport)
 router.delete('/Basket/:id', authenticateToken, Basket.DeleteId)
 
 //wylogowanie
-router.post('/logout', authController.logout);
+router.post('/logout', authenticateToken, authController.logout);
 
 
 
