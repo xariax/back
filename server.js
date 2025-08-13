@@ -37,6 +37,11 @@ app.use((req, res, next) => {
 // Podpinamy moduły tras
 app.use('/api', authRoutes);
 
+
+
+
+
+
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Serwer działa na porcie ${PORT}`));
 
