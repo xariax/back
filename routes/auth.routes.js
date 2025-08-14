@@ -22,7 +22,9 @@ router.get('/getBasket', authenticateToken, Basket.getBasket)
 router.get('/stock', authenticateToken, getStock)
 router.get('/events',authenticateToken, getRecentEvents);
 router.get('/getPlans/:sheetName',authenticateToken, getPlans);
-router.get('/me', authController.checkAuth);
+router.get('/me', authenticateToken, (req, res) => {
+  res.json({ success: true, user: req.user });
+});
 router.get('/DataMachine', authenticateToken, getDataMachine)
 
 router.put('/events/:id', updateEventReason);

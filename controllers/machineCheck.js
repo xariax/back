@@ -21,14 +21,15 @@ exports.getUserMachine =(req, res) => {
 exports.updateUserMachine=(req, res)=> {
   const login = req.user.login;
   const { machine } = req.body;
+  const timestapSession = Date.now()
 
   if (!machine || typeof machine !== 'string') {
     return res.status(400).json({ message: 'Nieprawidłowa maszyna' });
   }
 
-  const sql = `UPDATE users SET currentMachine = ? WHERE login = ?`;
+  const sql = `UPDATE users SET currentMachine = ?, timestapSession = ? WHERE login = ?`;
 
-  db.run(sql, [machine, login], function(err) {
+  db.run(sql, [machine,timestapSession, login], function(err) {
     if (err) {
       console.error('Błąd przy zapisie maszyny:', err.message);
       return res.status(500).json({ message: 'Błąd serwera' });
