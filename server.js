@@ -2,7 +2,7 @@ const express = require('express');
 const cors = require('cors');
 require('dotenv').config();
 const cookieParser = require('cookie-parser');
-
+const db = require('./db');
 const authRoutes = require('./routes/auth.routes');
 
 const app = express();
@@ -33,6 +33,37 @@ app.use((req, res, next) => {
   console.log('Cookies in request:', req.headers.cookie);
   next();
 });
+
+
+
+const SESSION_TIMEOUT = 300000; // 5 minut (albo 600000 dla 10 min)
+const CLEANUP_INTERVAL = 60000; // sprawdzanie co minutę
+
+function cleanExpiredSessions() {
+  const now = Date.now();
+  const expiryThreshold = now - SESSION_TIMEOUT;
+
+  const sql = `
+    UPDATE users
+    SET timestapSession = NULL,
+        currentMachine = NULL,
+        sessionId = NULL
+    WHERE timestapSession IS NOT NULL
+      AND timestapSession < ?
+  `;
+
+  db.run(sql, [expiryThreshold], function (err) {
+    if (err) {
+      console.error("Błąd czyszczenia sesji:", err.message);
+    } else if (this.changes > 0) {
+      console.log(`Wyczyszczono ${this.changes} wygasłych sesji.`);
+    }
+  });
+}
+
+setInterval(cleanExpiredSessions, CLEANUP_INTERVAL);
+
+
 
 // Podpinamy moduły tras
 app.use('/api', authRoutes);

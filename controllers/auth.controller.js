@@ -233,7 +233,7 @@ exports.logout = (req, res) => {
   // Tu możesz użyć login, jeśli jest dostępny (np. czyszczenie w bazie itd.)
   if (login) {
     // Przykład operacji na bazie, jeśli chcesz (opcjonalne)
-    const sql = `UPDATE users SET currentMachine = NULL, timestapSession = NULL WHERE login = ?`;
+    const sql = `UPDATE users SET currentMachine = NULL, timestapSession = NULL, sessionId = NULL WHERE login = ?`;
     db.run(sql, [login], function(err) {
       if (err) console.error('Błąd przy czyszczeniu currentMachine:', err.message);
       // Nawet jeśli jest błąd, usuwamy cookie i zwracamy odpowiedź
